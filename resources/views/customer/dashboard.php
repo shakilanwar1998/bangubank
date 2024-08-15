@@ -45,28 +45,36 @@
                       </thead>
 
                       <tbody class="divide-y divide-gray-200 bg-white">
+                      <?php foreach ($data['transactions'] as $transaction): ?>
                         <tr>
                           <td
                             class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-800 sm:pl-0">
-                            Bruce Wayne
+                            <?php echo $transaction['user_name']; ?>
                           </td>
                           <td
                             class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-500 sm:pl-0">
-                            bruce@wayne.com
+                              <?php echo $transaction['user_email']; ?>
                           </td>
+                            <?php if ($transaction['to_user_id'] == $data['user']['id']): ?>
                           <td
                             class="whitespace-nowrap px-2 py-4 text-sm font-medium text-emerald-600">
-                            +$10,240
+                            +$<?php echo $transaction['amount'] ?>
                           </td>
+                            <?php else: ?>
+                                <td class="whitespace-nowrap px-2 py-4 text-sm font-medium text-red-600">
+                                    -$<?php echo $transaction['amount'] ?>
+                                </td>
+                            <?php endif; ?>
                           <td
                             class="whitespace-nowrap px-2 py-4 text-sm text-gray-500">
-                            29 Sep 2023, 09:25 AM
+                            <?php echo $transaction['created_at'] ?>
                           </td>
                             <td
                                     class="whitespace-nowrap px-2 py-4 text-sm text-gray-500">
-                                Deposited
+                                <?php echo $transaction['remarks'] ?>
                             </td>
                         </tr>
+                      <?php endforeach; ?>
                       </tbody>
                     </table>
                   </div>

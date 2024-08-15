@@ -10,26 +10,30 @@ class TransactionController
 {
     private Balance $balanceModel;
     private Transaction $transactionModel;
-    public function __construct() {
+
+    public function __construct()
+    {
         $this->balanceModel = new Balance();
         $this->transactionModel = new Transaction();
     }
+
     public function deposit(): void
     {
-        $balance = $this->balanceModel->findOne('user_id',$_SESSION['user_id'])['amount'] ?? 0;
+        $balance = $this->balanceModel->findOne('user_id', $_SESSION['user_id'])['amount'] ?? 0;
 
         $newBalance = (float)$balance + (float)$_POST['amount'];
 
         $this->transactionModel->create([
-           'from_user_id' => $_SESSION['user_id'],
+            'from_user_id' => 0,
             'to_user_id' => $_SESSION['user_id'],
             'amount' => (float)$_POST['amount'],
+            'created_at' => date('Y-m-d H:i:s'),
             'remarks' => 'Deposited'
         ]);
 
         $this->balanceModel->updateOrCreate([
             'user_id' => $_SESSION['user_id'],
-        ],[
+        ], [
             'amount' => $newBalance,
         ]);
 
@@ -39,33 +43,40 @@ class TransactionController
 
     public function withdraw(): void
     {
-        $balance = $this->balanceModel->findOne('user_id',$_SESSION['user_id'])['amount'] ?? 0;
+        $balance = $this->balanceModel->findOne('user_id', $_SESSION['user_id'])['amount'] ?? 0;
 
         $newBalance = (float)$balance - (float)$_POST['amount'];
 
+        if ($newBalance < 0) {
+            header('Location: /dashboard');
+            die();
+        }
+
         $this->transactionModel->create([
             'from_user_id' => $_SESSION['user_id'],
-            'to_user_id' => $_SESSION['user_id'],
+            'to_user_id' => 0,
             'amount' => (float)$_POST['amount'],
+            'created_at' => date('Y-m-d H:i:s'),
             'remarks' => 'Withdrawn'
         ]);
 
         $this->balanceModel->updateOrCreate([
             'user_id' => $_SESSION['user_id'],
-        ],[
+        ], [
             'amount' => $newBalance,
         ]);
 
         header('Location: /dashboard');
     }
 
-    public function transfer(): void {
+    public function transfer(): void
+    {
         $recipientEmail = $_POST['email'];
         $amount = $_POST['amount'];
 
-        $recipient = (new User())->findOne('email',$recipientEmail);
+        $recipient = (new User())->findOne('email', $recipientEmail);
 
-        if(!$recipient) {
+        if (!$recipient) {
             header('Location: /dashboard');
             die();
         }
@@ -73,10 +84,15 @@ class TransactionController
         $from_user_id = $_SESSION['user_id'];
         $to_user_id = $recipient['id'];
 
-        $senderBalance = $this->balanceModel->findOne('user_id',$from_user_id)['amount'] ?? 0;
-        $receiverBalance = $this->balanceModel->findOne('user_id',$to_user_id)['amount'] ?? 0;
+        if ($from_user_id == $to_user_id) {
+            header('Location: /dashboard');
+            die();
+        }
 
-        if($senderBalance < $amount) {
+        $senderBalance = $this->balanceModel->findOne('user_id', $from_user_id)['amount'] ?? 0;
+        $receiverBalance = $this->balanceModel->findOne('user_id', $to_user_id)['amount'] ?? 0;
+
+        if ($senderBalance < $amount) {
             header('Location: /dashboard');
             die();
         }
@@ -85,18 +101,19 @@ class TransactionController
             'from_user_id' => $from_user_id,
             'to_user_id' => $to_user_id,
             'amount' => (float)$_POST['amount'],
-            'remarks' => 'Transferred to '.$recipient['email']
+            'created_at' => date('Y-m-d H:i:s'),
+            'remarks' => 'Transferred to ' . $recipient['email']
         ]);
 
         $this->balanceModel->updateOrCreate([
             'user_id' => $from_user_id,
-        ],[
+        ], [
             'amount' => $senderBalance - $amount,
         ]);
 
         $this->balanceModel->updateOrCreate([
             'user_id' => $to_user_id,
-        ],[
+        ], [
             'amount' => $receiverBalance + $amount,
         ]);
 

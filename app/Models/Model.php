@@ -23,15 +23,12 @@ class Model {
     }
 
     public function updateOrCreate(array $filter, array $data): array {
-        // Load the existing data from the file
         $db = json_decode(file_get_contents($this->filePath), true);
         $items = $db['data'] ?? array();
 
-        // Initialize a variable to track if an update was made
         $updatedItem = null;
         $itemFound = false;
 
-        // Iterate through the data to find the item that matches the filter
         foreach ($items as &$item) {
             $matchesFilter = true;
             foreach ($filter as $key => $value) {
@@ -41,7 +38,6 @@ class Model {
                 }
             }
 
-            // If the item matches the filter, update it with the new data
             if ($matchesFilter) {
                 $item = array_merge($item, $data);
                 $updatedItem = $item;
@@ -50,18 +46,15 @@ class Model {
             }
         }
 
-        // If no matching item was found, create a new one
         if (!$itemFound) {
             $newItem = array_merge($filter, $data);
             $items[] = $newItem;
             $updatedItem = $newItem;
         }
 
-        // Save the updated data back to the file
         $db['data'] = $items;
         file_put_contents($this->filePath, json_encode($db, JSON_PRETTY_PRINT));
 
-        // Return the updated or created item
         return $updatedItem;
     }
 

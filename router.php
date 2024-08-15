@@ -26,6 +26,11 @@ switch ($request) {
         $controller->index();
         break;
 
+    case '/logout':
+        $controller = new AuthController();
+        $controller->logout();
+        break;
+
     case '/register':
         $controller = new AuthController();
         $controller->register();
@@ -85,6 +90,13 @@ switch ($request) {
         authMiddleware();
         $controller = new TransactionController();
         $controller->transfer();
+        break;
+
+
+    case '/admin':
+        authMiddleware();
+        $controller = new \App\Controllers\AdminController();
+        $controller->index();
         break;
 
     default:

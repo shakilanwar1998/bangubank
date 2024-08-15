@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Models\Balance;
 use App\Models\Transaction;
 use App\Models\User;
 
@@ -33,10 +32,10 @@ class DashboardController
         $modifiedTransactions = array_map(function($transaction) use ($currentUserId) {
             $userId = $transaction['from_user_id'] == $currentUserId ? $transaction['to_user_id'] : $transaction['from_user_id'];
             
-            $user = (new User())->find($userId);
+            $user = (new User())->findOne('id',$userId);
 
-            $transaction['user_email'] = $user['email'];
-            $transaction['user_name'] = $user['name'];
+            $transaction['user_email'] = $user['email'] ?? "";
+            $transaction['user_name'] = $user['name'] ?? "";
 
             return $transaction;
         }, $transactions);
