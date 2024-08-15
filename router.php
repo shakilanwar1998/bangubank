@@ -3,6 +3,7 @@
 use App\Controllers\AuthController;
 use App\Controllers\DashboardController;
 use App\Controllers\HomeController;
+use App\Controllers\TransactionController;
 
 function authMiddleware(): void
 {
@@ -64,6 +65,26 @@ switch ($request) {
         authMiddleware();
         $controller = new DashboardController();
         $controller->getTransfer();
+        break;
+
+
+    case '/post-deposit':
+        authMiddleware();
+        $controller = new TransactionController();
+        $controller->deposit();
+        break;
+
+    case '/post-withdraw':
+        authMiddleware();
+        $controller = new TransactionController();
+        $controller->withdraw();
+        break;
+
+
+    case '/post-transfer':
+        authMiddleware();
+        $controller = new TransactionController();
+        $controller->transfer();
         break;
 
     default:

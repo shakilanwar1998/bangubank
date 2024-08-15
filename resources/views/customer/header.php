@@ -154,8 +154,28 @@
         <header class="py-10">
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <h1 class="text-3xl font-bold tracking-tight text-white">
-                    Howdy, Ahmed Shamim 👋
+                    Howdy, <?php echo $data['user']['name']; ?> 👋
                 </h1>
             </div>
         </header>
     </div>
+
+    <main class="-mt-32">
+        <div class="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
+            <div class="bg-white rounded-lg p-2">
+                <!-- Current Balance Stat -->
+                <dl
+                        class="mx-auto grid grid-cols-1 gap-px sm:grid-cols-2 lg:grid-cols-4">
+                    <div
+                            class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 bg-white px-4 py-10 sm:px-6 xl:px-8">
+                        <dt class="text-sm font-medium leading-6 text-gray-500">
+                            Current Balance
+                        </dt>
+                        <dd
+                                class="w-full flex-none text-3xl font-medium leading-10 tracking-tight text-gray-900">
+                            $<?php echo number_format((new \App\Models\Balance())->findOne('user_id',$_SESSION['user_id'])['amount'] ?? 0,2) ?>
+                        </dd>
+                    </div>
+                </dl>
+
+                <hr />

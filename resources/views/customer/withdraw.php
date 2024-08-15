@@ -1,33 +1,13 @@
 <?php include 'header.php'; ?>
-
-      <main class="-mt-32">
-        <div class="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
-          <div class="bg-white rounded-lg p-2">
-            <!-- Current Balance Stat -->
-            <dl
-              class="mx-auto grid grid-cols-1 gap-px sm:grid-cols-2 lg:grid-cols-4">
-              <div
-                class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 bg-white px-4 py-10 sm:px-6 xl:px-8">
-                <dt class="text-sm font-medium leading-6 text-gray-500">
-                  Current Balance
-                </dt>
-                <dd
-                  class="w-full flex-none text-3xl font-medium leading-10 tracking-tight text-gray-900">
-                  $10,115,091.00
-                </dd>
-              </div>
-            </dl>
-
-            <hr />
             <!-- Withdaw Form -->
             <div class="sm:rounded-lg">
               <div class="px-4 py-5 sm:p-6">
                 <h3 class="text-lg font-semibold leading-6 text-gray-800">
-                  Withdaw Money From Your Account
+                  Withdraw Money From Your Account
                 </h3>
                 <div class="mt-4 text-sm text-gray-500">
                   <form
-                    action="#"
+                    action="/post-withdraw"
                     method="POST">
                     <!-- Input Field -->
                     <div class="relative mt-2 rounded-md">
@@ -56,8 +36,5 @@
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </main>
 
 <?php include 'footer.php'; ?>
